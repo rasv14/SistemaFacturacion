@@ -2,7 +2,7 @@ using Comercial360.Application.Catalog;
 using Comercial360.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
+    //comentario
 namespace Comercial360.Adapters.Persistence;
 
 public sealed class EfCatalogStore(Comercial360DbContext dbContext) : ICatalogStore

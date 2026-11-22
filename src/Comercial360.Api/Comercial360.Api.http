@@ -1,0 +1,90 @@
+@Comercial360.Api_HostAddress = http://localhost:5133
+@saleIdempotencyKey = local-test-0001
+@customerId = 3b808915-6254-4e6a-9aa0-39ad29c7a101
+@productId = d5a0a634-3fa0-4dd3-8df1-47aa08e0ea21
+
+### Health check
+GET {{Comercial360.Api_HostAddress}}/health
+
+### Search customers
+GET {{Comercial360.Api_HostAddress}}/api/customers?search=Cliente&page=1&pageSize=20
+
+### Get customer by ID
+GET {{Comercial360.Api_HostAddress}}/api/customers/{{customerId}}
+
+### Create customer (SalesSupervisor)
+POST {{Comercial360.Api_HostAddress}}/api/customers
+Content-Type: application/json
+
+{
+  "documentType": "DNI",
+  "documentNumber": "12345678",
+  "name": "Cliente nuevo"
+}
+
+### Update customer (SalesSupervisor)
+PUT {{Comercial360.Api_HostAddress}}/api/customers/{{customerId}}
+Content-Type: application/json
+
+{
+  "documentType": "DNI",
+  "documentNumber": "00000001",
+  "name": "Cliente de prueba actualizado",
+  "isActive": true
+}
+
+### Deactivate customer (SalesSupervisor)
+DELETE {{Comercial360.Api_HostAddress}}/api/customers/{{customerId}}
+
+### Search products
+GET {{Comercial360.Api_HostAddress}}/api/products?search=PROD&page=1&pageSize=20
+
+### Get product by ID
+GET {{Comercial360.Api_HostAddress}}/api/products/{{productId}}
+
+### Create product (SalesSupervisor)
+POST {{Comercial360.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "code": "PROD-NEW",
+  "description": "Producto nuevo",
+  "unitNetPrice": 15.50,
+  "initialStock": 25
+}
+
+### Update product (SalesSupervisor; stock is preserved)
+PUT {{Comercial360.Api_HostAddress}}/api/products/{{productId}}
+Content-Type: application/json
+
+{
+  "code": "PROD-001",
+  "description": "Producto actualizado",
+  "unitNetPrice": 12.00,
+  "isActive": true
+}
+
+### Deactivate product (SalesSupervisor)
+DELETE {{Comercial360.Api_HostAddress}}/api/products/{{productId}}
+
+### List sales
+GET {{Comercial360.Api_HostAddress}}/api/sales?page=1&pageSize=20
+
+### Get sale by ID
+GET {{Comercial360.Api_HostAddress}}/api/sales/replace-with-sale-guid
+
+### Register a sale (requires SQL catalog data)
+POST {{Comercial360.Api_HostAddress}}/api/sales
+Idempotency-Key: {{saleIdempotencyKey}}
+Content-Type: application/json
+
+{
+  "customerId": "{{customerId}}",
+  "documentType": "Invoice",
+  "items": [
+    { "productId": "{{productId}}", "quantity": 2 }
+  ]
+}
+
+### Consult an electronic document
+GET {{Comercial360.Api_HostAddress}}/api/electronic-documents/replace-with-document-guid

@@ -12,6 +12,9 @@ GET {{Comercial360.Api_HostAddress}}/api/customers?search=Cliente&page=1&pageSiz
 ### Get customer by ID
 GET {{Comercial360.Api_HostAddress}}/api/customers/{{customerId}}
 
+### Get customer by document
+GET {{Comercial360.Api_HostAddress}}/api/customers/by-document?documentNumber=12345678&documentType=DNI
+
 ### Create customer (SalesSupervisor)
 POST {{Comercial360.Api_HostAddress}}/api/customers
 Content-Type: application/json

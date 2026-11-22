@@ -34,6 +34,10 @@ public interface ICatalogStore
         CancellationToken cancellationToken);
 
     Task<Domain.Entities.Customer?> GetCustomerAsync(Guid id, CancellationToken cancellationToken);
+    Task<Domain.Entities.Customer?> GetCustomerByDocumentAsync(
+        string documentNumber,
+        string? documentType,
+        CancellationToken cancellationToken);
     Task SaveCustomerAsync(Domain.Entities.Customer customer, bool isNew, CancellationToken cancellationToken);
 
     Task<IReadOnlyCollection<Domain.Entities.Product>> ListProductsAsync(
@@ -57,6 +61,10 @@ public interface ICatalogService
         CancellationToken cancellationToken);
 
     Task<CustomerData?> GetCustomerAsync(Guid id, CancellationToken cancellationToken);
+    Task<CustomerData?> GetCustomerByDocumentAsync(
+        string documentNumber,
+        string? documentType,
+        CancellationToken cancellationToken);
     Task<CustomerData> CreateCustomerAsync(CustomerInput input, CancellationToken cancellationToken);
     Task<CustomerData?> UpdateCustomerAsync(Guid id, CustomerInput input, CancellationToken cancellationToken);
     Task<bool> DeactivateCustomerAsync(Guid id, CancellationToken cancellationToken);

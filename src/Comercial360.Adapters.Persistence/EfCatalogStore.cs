@@ -39,6 +39,22 @@ public sealed class EfCatalogStore(Comercial360DbContext dbContext) : ICatalogSt
     public Task<Customer?> GetCustomerAsync(Guid id, CancellationToken cancellationToken) =>
         dbContext.Customers.SingleOrDefaultAsync(customer => customer.Id == id, cancellationToken);
 
+    public Task<Customer?> GetCustomerByDocumentAsync(
+        string documentNumber,
+        string? documentType,
+        CancellationToken cancellationToken)
+    {
+        var query = dbContext.Customers.AsNoTracking().Where(customer =>
+            customer.DocumentNumber == documentNumber);
+
+        if (!string.IsNullOrWhiteSpace(documentType))
+        {
+            query = query.Where(customer => customer.DocumentType == documentType);
+        }
+
+        return query.FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task SaveCustomerAsync(Customer customer, bool isNew, CancellationToken cancellationToken)
     {
         if (isNew)

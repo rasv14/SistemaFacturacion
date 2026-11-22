@@ -27,6 +27,23 @@ public sealed class CatalogService(ICatalogStore store) : ICatalogService
         return customer is null ? null : ToData(customer);
     }
 
+    public async Task<CustomerData?> GetCustomerByDocumentAsync(
+        string documentNumber,
+        string? documentType,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(documentNumber))
+        {
+            throw new ArgumentException("El número de documento es obligatorio.", nameof(documentNumber));
+        }
+
+        var customer = await store.GetCustomerByDocumentAsync(
+            documentNumber.Trim(),
+            string.IsNullOrWhiteSpace(documentType) ? null : documentType.Trim(),
+            cancellationToken);
+        return customer is null ? null : ToData(customer);
+    }
+
     public async Task<CustomerData> CreateCustomerAsync(CustomerInput input, CancellationToken cancellationToken)
     {
         var customer = Customer.Create(input.DocumentType, input.DocumentNumber, input.Name);

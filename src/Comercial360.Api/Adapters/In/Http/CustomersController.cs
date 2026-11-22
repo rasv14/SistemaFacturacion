@@ -39,6 +39,30 @@ public sealed class CustomersController(ICatalogService catalogService) : Contro
         return customer is null ? NotFound() : Ok(ToResponse(customer));
     }
 
+    [HttpGet("by-document")]
+    [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<CustomerResponse>> GetByDocument(
+        [FromQuery] string documentNumber,
+        [FromQuery] string? documentType,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(documentNumber))
+        {
+            return Problem(
+                title: "Documento inválido",
+                detail: "documentNumber es obligatorio.",
+                statusCode: StatusCodes.Status400BadRequest);
+        }
+
+        var customer = await catalogService.GetCustomerByDocumentAsync(
+            documentNumber,
+            documentType,
+            cancellationToken);
+        return customer is null ? NotFound() : Ok(ToResponse(customer));
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
